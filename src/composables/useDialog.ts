@@ -8,7 +8,7 @@ import type {
   ConfirmDialogOptions,
   AlertDialogOptions,
   CustomDialogOptions,
-  DialogResult
+  DialogResult,
 } from '../types/common/dialog'
 
 // ===================================
@@ -20,7 +20,7 @@ const dialogState: DialogState = reactive<DialogState>({
   dialogs: [],
   get hasOpenDialog(): boolean {
     return this.dialogs.length > 0
-  }
+  },
 })
 
 /** 對話框 ID 計數器 */
@@ -38,15 +38,15 @@ const generateDialogId = (): string => {
 /** 創建對話框實例 */
 const createDialogInstance = <T extends DialogResult>(
   type: DialogInstance['type'],
-  options: DialogInstance['options']
+  options: DialogInstance['options'],
 ): { instance: DialogInstance; promise: Promise<T> } => {
   const id = generateDialogId()
 
-  let resolvePromise: (value: T) => void
-  let rejectPromise: (reason?: unknown) => void
+  let resolvePromise: (value: unknown) => void = () => {}
+  let rejectPromise: (reason?: unknown) => void = () => {}
 
   const promise = new Promise<T>((resolve, reject) => {
-    resolvePromise = resolve
+    resolvePromise = resolve as (value: unknown) => void
     rejectPromise = reject
   })
 
@@ -54,10 +54,10 @@ const createDialogInstance = <T extends DialogResult>(
     id,
     type,
     options,
-    resolve: resolvePromise!,
-    reject: rejectPromise!,
+    resolve: resolvePromise,
+    reject: rejectPromise,
     visible: false,
-    loading: false
+    loading: false,
   }
 
   return { instance, promise }
@@ -65,7 +65,7 @@ const createDialogInstance = <T extends DialogResult>(
 
 /** 移除對話框實例 */
 const removeDialogInstance = (id: string): void => {
-  const index = dialogState.dialogs.findIndex(dialog => dialog.id === id)
+  const index = dialogState.dialogs.findIndex((dialog) => dialog.id === id)
   if (index > -1) {
     dialogState.dialogs.splice(index, 1)
   }
@@ -73,7 +73,7 @@ const removeDialogInstance = (id: string): void => {
 
 /** 尋找對話框實例 */
 const findDialogInstance = (id: string): DialogInstance | undefined => {
-  return dialogState.dialogs.find(dialog => dialog.id === id)
+  return dialogState.dialogs.find((dialog) => dialog.id === id)
 }
 
 // ===================================
@@ -83,7 +83,7 @@ const findDialogInstance = (id: string): DialogInstance | undefined => {
 /** 顯示對話框 */
 const showDialog = async <T extends DialogResult>(
   type: DialogInstance['type'],
-  options: DialogInstance['options']
+  options: DialogInstance['options'],
 ): Promise<T> => {
   const { instance, promise } = createDialogInstance<T>(type, options)
 
@@ -91,7 +91,7 @@ const showDialog = async <T extends DialogResult>(
   dialogState.dialogs.push(instance)
 
   // 下一個 tick 後顯示（確保 DOM 已更新）
-  await new Promise(resolve => setTimeout(resolve, 0))
+  await new Promise((resolve) => setTimeout(resolve, 0))
   instance.visible = true
 
   // 設置自動清理
@@ -154,7 +154,7 @@ const confirm = async (options: ConfirmDialogOptions): Promise<boolean> => {
     confirmText: '確認',
     cancelText: '取消',
     closeOnOverlay: true,
-    loading: false
+    loading: false,
   }
 
   const mergedOptions = { ...defaultOptions, ...options }
@@ -166,7 +166,7 @@ const alert = async (options: AlertDialogOptions): Promise<void> => {
   const defaultOptions: Partial<AlertDialogOptions> = {
     title: '提示',
     confirmText: '確認',
-    closeOnOverlay: true
+    closeOnOverlay: true,
   }
 
   const mergedOptions = { ...defaultOptions, ...options }
@@ -176,7 +176,7 @@ const alert = async (options: AlertDialogOptions): Promise<void> => {
 /** 自定義對話框 */
 const custom = async <T = unknown>(options: CustomDialogOptions): Promise<T> => {
   const defaultOptions: Partial<CustomDialogOptions> = {
-    closeOnOverlay: true
+    closeOnOverlay: true,
   }
 
   const mergedOptions = { ...defaultOptions, ...options }
@@ -204,7 +204,7 @@ const dialogService: DialogService = {
   alert,
   custom,
   closeAll,
-  close
+  close,
 }
 
 // ===================================
@@ -229,8 +229,8 @@ export const useDialog = () => {
       handleCancel,
       handleClose,
       setLoading,
-      findDialogInstance
-    }
+      findDialogInstance,
+    },
   }
 }
 
@@ -248,7 +248,7 @@ function readonly<T extends object>(obj: T): Readonly<T> {
     deleteProperty(): boolean {
       console.warn('Dialog state is readonly')
       return false
-    }
+    },
   }) as Readonly<T>
 }
 
