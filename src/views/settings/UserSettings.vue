@@ -31,7 +31,7 @@
         <button class="row">
           <img src="@/assets/img/icon/navbar/settings.png" class="row-icon" alt="" />
           <span class="row-label">帳號設定</span>
-          <img src="@/assets/img/icon/common/arrow_right_key.png" class="row-arrow" alt="" />
+          <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow" alt="" />
         </button>
 
         <div class="divider" />
@@ -48,7 +48,7 @@
     <template v-else>
 
       <div class="guest">
-        <div class="guest-avatar" />
+        <img src="@/assets/img/logo/booptap-logo.png" class="guest-avatar" alt="booptap" />
         <p class="guest-hint">登入以記錄你的足跡</p>
       </div>
 
@@ -58,7 +58,7 @@
         <button class="row" @click="goToLogin">
           <img src="@/assets/img/icon/navbar/settings.png" class="row-icon" alt="" />
           <span class="row-label">登入 / 註冊</span>
-          <img src="@/assets/img/icon/common/arrow_right_key.png" class="row-arrow" alt="" />
+          <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow" alt="" />
         </button>
       </div>
 
@@ -297,7 +297,8 @@ async function handleLogout() {
   width: 96px
   height: 96px
   border-radius: 50%
-  background: $camera-border-light
+
+  object-fit: cover
 
 .guest-hint
   margin: 0

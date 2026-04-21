@@ -6,7 +6,7 @@
     </button>
 
     <div class="login-brand">
-      <img src="@/assets/img/logo/cat-logo.png" class="login-logo" alt="booptap" />
+      <img src="@/assets/img/logo/booptap-logo.png" class="login-logo" alt="booptap" />
       <p class="login-app-name">booptap</p>
     </div>
 

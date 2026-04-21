@@ -11,11 +11,25 @@
 
       <!-- 導航列 -->
       <div v-if="currentDay" class="diary-nav">
-        <button class="nav-btn" @click="prevDay" :disabled="currentIndex === 0">←</button>
-        <div class="nav-center">
-          <p class="nav-day">Day {{ currentIndex + 1 }}</p>
+        <div class="nav-btn-group">
+          <button class="nav-btn" @click="firstDay" :disabled="currentIndex === 0">
+            <img src="@/assets/img/icon/common/arrow_left_double.png" class="nav-icon" alt="第一頁" />
+          </button>
+          <button class="nav-btn" @click="prevDay" :disabled="currentIndex === 0">
+            <img src="@/assets/img/icon/common/arrow_left_key.png" class="nav-icon" alt="上一頁" />
+          </button>
         </div>
-        <button class="nav-btn" @click="nextDay" :disabled="currentIndex === groupedDays.length - 1">→</button>
+        <div class="nav-center">
+          <p class="nav-day">Day {{ groupedDays.length - currentIndex }}</p>
+        </div>
+        <div class="nav-btn-group">
+          <button class="nav-btn" @click="nextDay" :disabled="currentIndex === groupedDays.length - 1">
+            <img src="@/assets/img/icon/common/arrow_right_key.png" class="nav-icon" alt="下一頁" />
+          </button>
+          <button class="nav-btn" @click="lastDay" :disabled="currentIndex === groupedDays.length - 1">
+            <img src="@/assets/img/icon/common/arrow_right_double.png" class="nav-icon" alt="最後一頁" />
+          </button>
+        </div>
       </div>
 
       <!-- 頁面內容（flip 動畫） -->
@@ -113,7 +127,7 @@ const groupedDays = computed<DayGroup[]>(() => {
   }
 
   return Array.from(map.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => b.localeCompare(a))
     .map(([key, items]) => ({
       dateKey: key,
       dateLabel: formatDateLabel(items[0]!.createdAt, items[0]!.timezone),
@@ -146,6 +160,11 @@ function triggerFade(callback: () => void) {
   }, 300)
 }
 
+function firstDay() {
+  if (currentIndex.value === 0) return
+  triggerFade(() => { currentIndex.value = 0 })
+}
+
 function prevDay() {
   if (currentIndex.value === 0) return
   triggerFade(() => { currentIndex.value-- })
@@ -154,6 +173,11 @@ function prevDay() {
 function nextDay() {
   if (currentIndex.value === groupedDays.value.length - 1) return
   triggerFade(() => { currentIndex.value++ })
+}
+
+function lastDay() {
+  if (currentIndex.value === groupedDays.value.length - 1) return
+  triggerFade(() => { currentIndex.value = groupedDays.value.length - 1 })
 }
 
 function getTimezoneOffset(date: Date, timezone: string): string {
@@ -216,6 +240,12 @@ onMounted(() => {
   padding: 16px 24px 8px
   background: #F7F7F1
 
+.nav-btn-group
+  display: flex
+  align-items: center
+
+  gap: 2px
+
 .nav-btn
   display: flex
   align-items: center
@@ -225,8 +255,6 @@ onMounted(() => {
   border: none
   border-radius: 50%
   background: none
-  color: $camera-text-primary
-  font-size: 20px
   cursor: pointer
   transition: background 0.15s
 
@@ -236,6 +264,13 @@ onMounted(() => {
   &:disabled
     opacity: 0.25
     cursor: not-allowed
+
+.nav-icon
+  width: 20px
+  height: 20px
+  filter: brightness(0)
+
+  object-fit: contain
 
 .nav-center
   display: flex
@@ -253,7 +288,7 @@ onMounted(() => {
 
 .nav-day
   margin: 0
-  color: $camera-text-primary
+  color: $spot-text-primary
   font-weight: bold
   font-size: 26px
   font-family: 'Hachi Maru Pop', cursive
@@ -322,11 +357,11 @@ onMounted(() => {
 // 資訊
 .info
   display: flex
-  flex-direction: column
   align-self: center
-  width: 85%
-  max-width: 320px
+  flex-direction: column
   margin-top: 8px
+  max-width: 320px
+  width: 85%
 
   gap: 8px
 

@@ -33,7 +33,7 @@
           <span v-else-if="locationExpanded">收起地點</span>
           <span v-else>新增地點</span>
         </span>
-        <img src="@/assets/img/icon/common/arrow_right_key.png" class="row-arrow"
+        <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow"
           :class="{ 'row-arrow--open': locationExpanded }" alt="" />
       </button>
 
@@ -297,11 +297,11 @@ $caramel: #C07D45
 .herenow
   display: flex
   flex-direction: column
+  box-sizing: border-box
   margin: 0 auto
   padding: 42px 36px
   min-height: 100%
   max-width: 480px
-  box-sizing: border-box
   background-color: #FAF8F3
   background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(180, 160, 130, 0.18) 31px, rgba(180, 160, 130, 0.18) 32px)
   background-attachment: local
@@ -320,8 +320,8 @@ $caramel: #C07D45
 
 .photo-btn
   display: flex
-  flex-direction: column
   align-items: center
+  flex-direction: column
   justify-content: center
   padding: 20px 0
   width: 100%
@@ -368,8 +368,8 @@ $caramel: #C07D45
 
   &:active
     border-color: $camera-text-secondary
-    color: $camera-text-primary
     background: rgba(255, 255, 255, 0.8)
+    color: $camera-text-primary
 
 .time-group
   display: flex
@@ -428,8 +428,8 @@ $caramel: #C07D45
 
 .row-value
   color: $camera-text-primary
-  font-size: 13px
   font-weight: 500
+  font-size: 13px
 
 .row-arrow
   flex-shrink: 0
@@ -458,7 +458,7 @@ $caramel: #C07D45
 // 頁面標題
 .page-title
   margin: 0
-  color: $camera-text-primary
+  color: $spot-text-primary
   text-align: left
   font-weight: normal
   font-size: 26px

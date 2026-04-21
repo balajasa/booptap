@@ -13,12 +13,21 @@
         <span>打卡</span>
       </RouterLink>
       <RouterLink to="/settings" class="nav-item" active-class="nav-item--active">
-        <img src="@/assets/img/icon/navbar/settings.png" class="nav-icon" alt="" />
+        <div v-if="isLoggedIn && avatarURL" class="nav-avatar-ring">
+          <img :src="avatarURL" class="nav-avatar" alt="avatar" />
+        </div>
+        <img v-else src="@/assets/img/icon/navbar/settings.png" class="nav-icon" alt="" />
         <span>設定</span>
       </RouterLink>
     </nav>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useAuthUser } from '@/composables/useAuthUser'
+
+const { isLoggedIn, avatarURL } = useAuthUser()
+</script>
 
 <style lang="sass" scoped>
 @use '@/styles/variables' as *
@@ -69,5 +78,24 @@
   .nav-item--active &
     opacity: 1
     filter: brightness(0) saturate(100%) invert(19%) sepia(80%) saturate(1500%) hue-rotate(195deg) brightness(90%)
+
+.nav-avatar-ring
+  padding: 2px
+  border-radius: 50%
+  background: linear-gradient(135deg, #005CAF, #5BA8D9, #895B8A)
+  opacity: 0.55
+  transition: opacity 0.2s
+
+  .nav-item--active &
+    opacity: 1
+
+.nav-avatar
+  display: block
+  width: 24px
+  height: 24px
+  border: 1.5px solid #ffffff
+  border-radius: 50%
+
+  object-fit: cover
 
 </style>
