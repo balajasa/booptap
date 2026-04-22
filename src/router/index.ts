@@ -37,17 +37,16 @@ const router = createRouter({
   ],
 })
 
-function getCurrentUser() {
-  return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      unsubscribe()
-      resolve(user)
-    })
+// 只解析一次，後續 navigation 直接用已解析的結果
+const authReady = new Promise((resolve) => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    unsubscribe()
+    resolve(user)
   })
-}
+})
 
 router.beforeEach(async (to) => {
-  const user = await getCurrentUser()
+  const user = await authReady
 
   if (to.matched.some((r) => r.meta.requiresAuth) && !user) {
     return { name: 'Login' }
