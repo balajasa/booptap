@@ -62,7 +62,7 @@
 
     <!-- 打卡按鈕 -->
     <button class="submit-btn" @click="submit" :disabled="checkinStore.isSubmitting.value">
-      {{ checkinStore.isSubmitting.value ? '上傳中...' : '打卡' }}
+      {{ checkinStore.isSubmitting.value ? '上傳中...' : '分享' }}
     </button>
 
     <!-- 重置按鈕 -->

@@ -96,6 +96,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleEscapeKey))
   left: 0
   width: 100vw
   height: 100vh
+  z-index: 9000
   pointer-events: none
 
 .dialog-instance

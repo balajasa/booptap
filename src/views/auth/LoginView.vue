@@ -1,7 +1,7 @@
 <template>
   <div class="login">
 
-    <button class="login-close" @click="router.back()">
+    <button class="login-close" @click="handleClose">
       <span class="login-close-icon">×</span>
     </button>
 
@@ -62,6 +62,10 @@ const form = reactive({
 })
 
 const errors = reactive<{ email?: string; password?: string; general?: string }>({})
+
+function handleClose() {
+  router.replace('/collection')
+}
 
 function showError(message: string) {
   errors.general = message
@@ -219,10 +223,13 @@ async function handleLogin() {
     color: $camera-text-muted
 
   &:focus
-    border-color: $camera-accent
+    border-color: $country-tab-border
 
   &--error
     border-color: $camera-error
+
+    &:focus
+      border-color: $camera-error
 
 .field-error
   margin: 0

@@ -8,9 +8,13 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/layouts/DefaultLayout.vue'),
-      meta: { requiresAuth: true },
       children: [
         { path: '', redirect: '/collection' },
+        {
+          path: 'calendar',
+          name: 'Calendar',
+          component: () => import('@/views/calendar/CalendarView.vue'),
+        },
         {
           path: 'herenow',
           name: 'HereNow',
@@ -25,6 +29,11 @@ const router = createRouter({
           path: 'settings',
           name: 'Settings',
           component: () => import('@/views/settings/UserSettings.vue'),
+        },
+        {
+          path: 'changelog',
+          name: 'Changelog',
+          component: () => import('@/views/settings/ChangelogView.vue'),
         },
       ],
     },

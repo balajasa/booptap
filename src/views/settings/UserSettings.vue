@@ -33,6 +33,11 @@
           <span class="row-label">帳號設定</span>
           <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow" alt="" />
         </button>
+        <button class="row" @click="router.push('/changelog')">
+          <img src="@/assets/img/icon/settings/diagnosis.png" class="row-icon" alt="" />
+          <span class="row-label">更新日誌</span>
+          <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow" alt="" />
+        </button>
 
         <div class="divider" />
 
@@ -64,11 +69,6 @@
 
     </template>
 
-    <!-- 版本資訊 -->
-    <div class="footer">
-      <p class="footer-text">booptap v0.0.1</p>
-      <p class="footer-text">© 2026</p>
-    </div>
 
   </div>
 </template>
@@ -355,18 +355,4 @@ async function handleLogout() {
 
   object-fit: contain
 
-// 版本資訊
-.footer
-  display: flex
-  align-items: center
-  flex-direction: column
-  margin-top: auto
-  padding-top: 32px
-
-  gap: 2px
-
-.footer-text
-  margin: 0
-  color: $camera-text-muted
-  font-size: 12px
 </style>

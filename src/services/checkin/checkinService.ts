@@ -42,8 +42,9 @@ export async function uploadPhoto(file: File): Promise<string> {
 
   if (!res.ok) {
     const errData = await res.json().catch(() => ({}))
+    const reason = errData?.error?.message ?? `HTTP ${res.status}`
     console.error('Cloudinary 上傳失敗', res.status, errData)
-    throw new Error('照片上傳失敗')
+    throw new Error(`照片上傳失敗：${reason}`)
   }
 
   const data = await res.json()

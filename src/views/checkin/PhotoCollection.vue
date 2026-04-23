@@ -51,7 +51,7 @@
               <p class="info-message">{{ currentCheckin.message }}</p>
             </div>
             <div v-if="currentCheckin.hashtags?.length" class="info-hashtags">
-              <span v-for="tag in currentCheckin.hashtags" :key="tag" class="info-tag">#{{ tag }}</span>
+              <span v-for="tag in currentCheckin.hashtags" :key="tag" class="info-tag">{{ tag }}</span>
             </div>
             <div v-if="currentCheckin.locationName" class="info-row">
               <img src="@/assets/img/icon/location_pin.png" class="info-icon" alt="" />
@@ -413,6 +413,7 @@ onMounted(() => {
 
 .info-message-wrap
   margin-bottom: 8px
+  min-height: 60px
 
 .info-message
   margin: 0
@@ -428,8 +429,11 @@ onMounted(() => {
   gap: 6px
 
 .info-tag
+  padding: 3px 10px
+  border-radius: 999px
+  background: rgba($country-tab-border, 0.12)
   color: $country-tab-border
-  font-size: 13px
+  font-size: 12px
 
 // 縮圖列
 .thumbnails-wrap
