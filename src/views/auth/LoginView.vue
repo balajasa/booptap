@@ -21,10 +21,20 @@
       </div>
 
       <div class="field">
-        <input v-model="form.password" type="password" placeholder="密碼" class="field-input"
-          :class="{ 'field-input--error': errors.password }" autocomplete="current-password" />
+        <div class="field-password-wrap">
+          <input v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="密碼" class="field-input field-input--password"
+            :class="{ 'field-input--error': errors.password }" autocomplete="current-password" />
+          <button type="button" class="password-toggle" @click="showPassword = !showPassword" tabindex="-1">
+            <img :src="showPassword ? eyeOn : eyeOff" class="password-toggle-icon" alt="" />
+          </button>
+        </div>
         <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
       </div>
+
+      <label class="remember-label">
+        <input v-model="rememberEmail" type="checkbox" class="remember-checkbox" />
+        記住信箱
+      </label>
 
       <p v-if="errors.general" class="login-error-general">{{ errors.general }}</p>
 
@@ -48,6 +58,8 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import eyeOn from '@/assets/img/icon/common/eye_on.png'
+import eyeOff from '@/assets/img/icon/common/eye_off.png'
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '@/firebase'
 import type { UserProfile } from '@/types/user'
@@ -55,9 +67,11 @@ import type { UserProfile } from '@/types/user'
 const router = useRouter()
 
 const isLoading = ref(false)
+const showPassword = ref(false)
+const rememberEmail = ref(!!localStorage.getItem('savedEmail'))
 
 const form = reactive({
-  email: '',
+  email: localStorage.getItem('savedEmail') ?? '',
   password: '',
 })
 
@@ -98,6 +112,12 @@ async function handleLogin() {
       await auth.signOut()
       showError('此帳號已停用')
       return
+    }
+
+    if (rememberEmail.value) {
+      localStorage.setItem('savedEmail', form.email)
+    } else {
+      localStorage.removeItem('savedEmail')
     }
 
     if (window.history.length > 1) {
@@ -236,6 +256,48 @@ async function handleLogin() {
   padding-left: 4px
   color: $camera-error
   font-size: 13px
+
+.field-password-wrap
+  position: relative
+
+.field-input--password
+  padding-right: 64px
+
+.password-toggle
+  position: absolute
+  top: 50%
+  right: 14px
+  transform: translateY(-50%)
+  border: none
+  background: none
+  color: $camera-text-secondary
+  font-size: 13px
+  cursor: pointer
+  padding: 0
+
+  &:active
+    opacity: 0.6
+
+.password-toggle-icon
+  width: 20px
+  height: 20px
+  display: block
+  object-fit: contain
+
+.remember-label
+  display: flex
+  align-items: center
+  color: $camera-text-secondary
+  font-size: 14px
+  cursor: pointer
+  user-select: none
+
+  gap: 8px
+
+.remember-checkbox
+  width: 16px
+  height: 16px
+  cursor: pointer
 
 .login-error-general
   margin: 0

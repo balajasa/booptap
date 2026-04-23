@@ -224,11 +224,37 @@ function resetForm() {
   if (mapInstance) { mapInstance.remove(); mapInstance = null }
 }
 
-function onFileChange(e: Event) {
+function compressImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    const objectUrl = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl)
+      const MAX = 1920
+      const ratio = Math.min(1, MAX / img.width, MAX / img.height)
+      const w = Math.round(img.width * ratio)
+      const h = Math.round(img.height * ratio)
+      const canvas = document.createElement('canvas')
+      canvas.width = w
+      canvas.height = h
+      canvas.getContext('2d')!.drawImage(img, 0, 0, w, h)
+      canvas.toBlob(
+        (blob) => resolve(blob ? new File([blob], file.name, { type: 'image/jpeg' }) : file),
+        'image/jpeg',
+        0.9
+      )
+    }
+    img.onerror = () => { URL.revokeObjectURL(objectUrl); resolve(file) }
+    img.src = objectUrl
+  })
+}
+
+async function onFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
-  form.value.photo = file
-  previewURL.value = URL.createObjectURL(file)
+  const compressed = await compressImage(file)
+  form.value.photo = compressed
+  previewURL.value = URL.createObjectURL(compressed)
 }
 
 async function submit() {
