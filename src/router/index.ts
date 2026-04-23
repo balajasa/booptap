@@ -11,11 +11,6 @@ const router = createRouter({
       children: [
         { path: '', redirect: '/collection' },
         {
-          path: 'calendar',
-          name: 'Calendar',
-          component: () => import('@/views/calendar/CalendarView.vue'),
-        },
-        {
           path: 'herenow',
           name: 'HereNow',
           component: () => import('@/views/checkin/HereNow.vue'),
