@@ -95,10 +95,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useCheckinStore } from '@/stores/useCheckinStore'
 import { optimizeImageUrl } from '@/services/checkin/checkinService'
 import type { Checkin } from '@/types/checkin/checkin'
 import DiaryDecorations from '@/components/DiaryDecorations.vue'
+
+const route = useRoute()
 
 const store = useCheckinStore()
 const { isLoading, error, loadCheckins } = store
@@ -200,8 +203,13 @@ function formatTime(date: Date, timezone: string): string {
   }).format(date)
 }
 
-onMounted(() => {
-  loadCheckins()
+onMounted(async () => {
+  await loadCheckins()
+  const dateParam = route.query.date as string | undefined
+  if (dateParam) {
+    const idx = groupedDays.value.findIndex(d => d.dateKey === dateParam)
+    if (idx !== -1) currentIndex.value = idx
+  }
 })
 </script>
 

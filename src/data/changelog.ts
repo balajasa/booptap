@@ -6,6 +6,11 @@ export interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: 'v0.0.3 beta',
+    date: '2026/04/24',
+    items: ['新增了日曆功能，可以更方便地查看打卡紀錄', '外面在下雨，希望下班的時候雨可以停'],
+  },
+  {
     version: 'v0.0.2 beta',
     date: '2026/04/23',
     items: [

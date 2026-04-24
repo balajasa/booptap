@@ -8,6 +8,10 @@
         <img src="@/assets/img/icon/navbar/photo_library.png" class="nav-icon" alt="" />
         <span>相簿</span>
       </RouterLink>
+      <RouterLink to="/calendar" class="nav-item" active-class="nav-item--active">
+        <img src="@/assets/img/icon/navbar/calendar.png" class="nav-icon" alt="" />
+        <span>日曆</span>
+      </RouterLink>
       <RouterLink to="/herenow" class="nav-item" active-class="nav-item--active">
         <img src="@/assets/img/icon/navbar/add_photo.png" class="nav-icon" alt="" />
         <span>打卡</span>

@@ -2,6 +2,13 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/firebase'
 
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void
+    dataLayer: unknown[]
+  }
+}
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -19,6 +26,11 @@ const router = createRouter({
           path: 'collection',
           name: 'Collection',
           component: () => import('@/views/checkin/PhotoCollection.vue'),
+        },
+        {
+          path: 'calendar',
+          name: 'Calendar',
+          component: () => import('@/views/calendar/CalendarView.vue'),
         },
         {
           path: 'settings',
@@ -58,6 +70,15 @@ router.beforeEach(async (to) => {
 
   if (to.name === 'Login' && user) {
     return { name: 'Collection' }
+  }
+})
+
+router.afterEach((to) => {
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'page_view', {
+      page_path: to.fullPath,
+      page_title: to.name?.toString() ?? document.title,
+    })
   }
 })
 
