@@ -184,12 +184,14 @@ function lastDay() {
 }
 
 function getTimezoneOffset(date: Date, timezone: string): string {
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: timezone,
-    timeZoneName: 'shortOffset',
-  })
-  const parts = formatter.formatToParts(date)
-  return parts.find(p => p.type === 'timeZoneName')?.value ?? ''
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+  const diffMinutes = Math.round((tzDate.getTime() - utcDate.getTime()) / 60000)
+  const sign = diffMinutes >= 0 ? '+' : '-'
+  const abs = Math.abs(diffMinutes)
+  const h = Math.floor(abs / 60)
+  const m = abs % 60
+  return m === 0 ? `UTC${sign}${h}` : `UTC${sign}${h}:${String(m).padStart(2, '0')}`
 }
 
 function formatTime(date: Date, timezone: string): string {

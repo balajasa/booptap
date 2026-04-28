@@ -3,7 +3,7 @@
 
     <div class="changelog-header">
       <button class="back-btn" @click="router.back()">
-        <img src="@/assets/img/icon/common/arrow_left_key.png" class="back-icon" alt="" />
+        <img src="@/assets/img/icon/common/arrow_back_ios.png" class="back-icon" alt="返回" />
       </button>
       <h1 class="changelog-title">更新日誌</h1>
     </div>
@@ -45,46 +45,49 @@ const router = useRouter()
   display: flex
   flex-direction: column
   box-sizing: border-box
-  margin: 0 auto
-  padding: 42px 36px
   min-height: 100%
-  max-width: 480px
 
 .changelog-header
   display: flex
   align-items: center
-  margin-bottom: 40px
+  flex-shrink: 0
+  padding: 16px 20px
+  border-bottom: 1px solid $camera-border-light
 
-  gap: 12px
+  gap: 4px
 
 .back-btn
   display: flex
   align-items: center
   justify-content: center
-  padding: 0
-  width: 32px
-  height: 32px
+  padding: 4px
+  width: 36px
+  height: 36px
   border: none
+  border-radius: 50%
   background: none
   cursor: pointer
+  transition: background 0.15s
+
+  &:active
+    background: $camera-border-light
 
 .back-icon
-  width: 20px
-  height: 20px
-  opacity: 0.5
+  width: 18px
+  height: 18px
   filter: brightness(0)
-
   object-fit: contain
 
 .changelog-title
   margin: 0
   color: $camera-text-primary
-  font-weight: 700
-  font-size: 20px
+  font-weight: 600
+  font-size: 17px
 
 .changelog-list
   display: flex
   flex-direction: column
+  padding: 32px 36px 48px
 
   gap: 40px
 

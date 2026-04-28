@@ -6,18 +6,15 @@
 
       <!-- 個人簡介 -->
       <div class="profile">
-        <div class="profile-avatar" @click="!isUploadingAvatar && fileInput?.click()">
-          <img v-if="avatarURL" :src="avatarURL" alt="avatar" class="profile-avatar-img"
-            :class="{ 'profile-avatar-img--loading': isUploadingAvatar }" />
+        <div class="profile-avatar" @click="router.push('/account-settings')">
+          <img v-if="avatarURL" :src="avatarURL" alt="avatar" class="profile-avatar-img" />
           <div v-else class="profile-avatar-placeholder">
             <img src="@/assets/img/icon/navbar/camera.png" class="profile-avatar-camera" alt="" />
           </div>
-          <div v-if="isUploadingAvatar" class="profile-avatar-spinner" />
-          <div v-else class="profile-avatar-badge">
+          <div class="profile-avatar-badge">
             <img src="@/assets/img/icon/navbar/camera.png" class="profile-avatar-badge-icon" alt="" />
           </div>
         </div>
-        <input type="file" accept="image/*" ref="fileInput" class="file-input" @change="onAvatarChange" />
         <div class="profile-info">
           <p class="profile-title">{{ title }}</p>
           <p class="profile-name">{{ displayName }}</p>
@@ -28,7 +25,7 @@
 
       <!-- 設定列表 -->
       <div class="list">
-        <button class="row">
+        <button class="row" @click="router.push('/account-settings')">
           <img src="@/assets/img/icon/navbar/settings.png" class="row-icon" alt="" />
           <span class="row-label">帳號設定</span>
           <img src="@/assets/img/icon/common/arrow_forward_ios.png" class="row-arrow" alt="" />
@@ -78,13 +75,10 @@ import { ref, computed, onUnmounted } from 'vue'
 import { getUserTitle } from '@/composables/useUserTitle'
 import { useRouter } from 'vue-router'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { doc, getDoc, updateDoc, collection, getCountFromServer } from 'firebase/firestore'
+import { doc, getDoc, collection, getCountFromServer } from 'firebase/firestore'
 import { auth, db } from '@/firebase'
 import { useDialog } from '@/composables/useDialog'
 import type { UserProfile } from '@/types/user'
-
-const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
 const router = useRouter()
 const dialog = useDialog()
@@ -92,7 +86,6 @@ const dialog = useDialog()
 const isLoggedIn = ref(false)
 const displayName = ref('')
 const avatarURL = ref<string | null>(null)
-const fileInput = ref<HTMLInputElement | null>(null)
 const checkinCount = ref(0)
 const userRole = ref<UserProfile['role']>('user')
 
@@ -122,42 +115,6 @@ const unsubscribe = onAuthStateChanged(auth, async (user) => {
 })
 
 onUnmounted(() => unsubscribe())
-
-const isUploadingAvatar = ref(false)
-
-async function onAvatarChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (!file) return
-
-  avatarURL.value = URL.createObjectURL(file)
-  isUploadingAvatar.value = true
-
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-    formData.append('folder', 'user_photo')
-
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      { method: 'POST', body: formData }
-    )
-    if (!res.ok) throw new Error('上傳失敗')
-
-    const data = await res.json()
-    const url = data.secure_url as string
-
-    const user = auth.currentUser
-    if (user) {
-      await updateDoc(doc(db, 'users', user.uid), { photoURL: url })
-      avatarURL.value = url
-    }
-  } catch {
-    avatarURL.value = null
-  } finally {
-    isUploadingAvatar.value = false
-  }
-}
 
 function goToLogin() {
   router.push('/login')
@@ -214,25 +171,6 @@ async function handleLogout() {
 
   object-fit: cover
 
-  &--loading
-    opacity: 0.4
-
-.profile-avatar-spinner
-  position: absolute
-  top: 50%
-  left: 50%
-  margin: -12px 0 0 -12px
-  width: 24px
-  height: 24px
-  border: 2px solid $camera-border-light
-  border-top-color: $country-tab-border
-  border-radius: 50%
-  animation: spin 0.8s linear infinite
-
-@keyframes spin
-  to
-    transform: rotate(360deg)
-
 .profile-avatar-placeholder
   display: flex
   align-items: center
@@ -269,9 +207,6 @@ async function handleLogout() {
   filter: brightness(0) invert(1)
 
   object-fit: contain
-
-.file-input
-  display: none
 
 .profile-name
   margin: 0

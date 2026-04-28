@@ -42,6 +42,11 @@ const router = createRouter({
           name: 'Changelog',
           component: () => import('@/views/settings/ChangelogView.vue'),
         },
+        {
+          path: 'account-settings',
+          name: 'AccountSettings',
+          component: () => import('@/views/settings/AccountSettings.vue'),
+        },
       ],
     },
     {
